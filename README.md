@@ -2,7 +2,7 @@
 
 To build a docker image of ROS2 on Jetson AGX Orin
  
- 1. run the following command directly in this directory:
+1. run the following command directly in this directory:
     ```
     ./BUILD-DOCKER-IMAGE.sh
     ```
