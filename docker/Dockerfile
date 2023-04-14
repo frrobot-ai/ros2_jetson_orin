@@ -13,6 +13,7 @@ ARG JETPACK_MINOR=0
 #This environment variable is needed to use the streaming features on Jetson inside a container
 ENV LOGNAME root
 ENV DEBIAN_FRONTEND noninteractive
+ENV ROS_DISTRO foxy
 
 #Install dependencies
 RUN apt-get update -y && apt-get install -y sudo apt-utils apt-transport-https lsb-release udev usbutils git 
@@ -34,7 +35,6 @@ RUN ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-
 #ROS system setup 
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
-ENV ROS_DISTRO foxy
 
 RUN apt-get update -y && apt-get install --no-install-recommends -y software-properties-common && \
     add-apt-repository universe && \
@@ -43,8 +43,8 @@ RUN apt-get update -y && apt-get install --no-install-recommends -y software-pro
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
-RUN apt-get update -y && apt-get install -y ros-ROS_DISTRO-ros-base && \
-    /bin/bash -c 'source /opt/ros/ROS_DISTRO/setup.bash' && \
+RUN apt-get update -y && apt-get install -y ros-$ROS_DISTRO-ros-base && \
+    /bin/bash -c 'source /opt/ros/$ROS_DISTRO/setup.bash' && \
     rm -rf /var/lib/apt/lists/*
 
 #Setup ROS Workspace
@@ -82,7 +82,7 @@ RUN cd ${ROS_WS}/ && \
 #RUN apt-get remove ros-ROS_DISTRO-image-transport
 #RUN apt-get remove ros-ROS_DISTRO-image-transport-plugins ros-ROS_DISTRO-compressed-depth-image-transport ros-ROS_DISTRO-compressed-image-transport
     
-RUN echo 'source /opt/ros/ROS_DISTRO/setup.bash' >> /root/.bashrc && \
+RUN echo 'source /opt/ros/$ROS_DISTRO/setup.bash' >> /root/.bashrc && \
     echo 'source ${ROS_WS}/install/local_setup.bash' >> /root/.bashrc
     
 RUN apt-get autoremove
@@ -105,7 +105,11 @@ RUN /bin/bash -c "source /opt/ros/$ROS_DISTRO/setup.bash && \
     mkdir -p ~/ros_ws/src"
 # Download source
 RUN /bin/bash -c "cd ~/ros_ws/src && \
-    git clone -b ROS_DISTRO_ur https://github.com/wangyan-hlab/ros2_desktop.git glozzom"
+    git clone -b foxy_ur https://github.com/frrobot-ai/ros2_jetson_orin.git glozzom"
+
+RUN apt update && \
+    apt install vim git make python3-pip -y
+RUN python3 -m pip install vcstool
 
 RUN /bin/bash -c "cd ~/ros_ws && \
     vcs import src/glozzom --skip-existing --input src/glozzom/Universal_Robots_ROS2_Driver/Universal_Robots_ROS2_Driver.repos"
