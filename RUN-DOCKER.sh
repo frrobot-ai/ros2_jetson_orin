@@ -9,7 +9,7 @@ PROJECT=$1
 if [ -z "${PROJECT}" ]; then
   PROJECT=${USER}
 fi
-CONTAINER="${PROJECT}_glozzom_1"
+CONTAINER="${PROJECT}-ros2_humble_ur_jetson-1"
 echo "$0: PROJECT=${PROJECT}"
 echo "$0: CONTAINER=${CONTAINER}"
 

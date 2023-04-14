@@ -3,7 +3,7 @@ version: "2.4"
 ################################################################################
 
 services:
-  glozzom:
+  ros2_humble_ur_jetson:
     hostname: localhost
     runtime: ${DOCKER_RUNTIME}
     privileged: true
@@ -23,7 +23,7 @@ services:
       - DOCKER_RUNTIME=${DOCKER_RUNTIME}
       # Needs to be explicitly define
       - ROS_HOSTNAME=localhost
-    image: ros2-foxy-jetson-jp5.0.2:latest
+    image: ros2-jetson-jp5.0.2:humble_ur
     tty: true
     build:
       context: ../
