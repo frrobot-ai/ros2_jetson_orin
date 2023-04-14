@@ -1,55 +1,11 @@
-ARG L4T_MINOR_VERSION=1.0
-
-# https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-jetpack
-FROM nvcr.io/nvidia/l4t-jetpack:r35.1.0
-
-# After using an arg in a `FROM` line, the arg is lo
-# ARG L4T_MINOR_VERSION=1.0
-# ARG ZED_SDK_MAJOR=3
-# ARG ZED_SDK_MINOR=7
-# ARG JETPACK_MAJOR=5
-# ARG JETPACK_MINOR=0
-
-#This environment variable is needed to use the streaming features on Jetson inside a container
-ENV LOGNAME root
-ENV DEBIAN_FRONTEND noninteractive
-
-#Install dependencies
-RUN apt-get update -y && apt-get install -y sudo apt-utils apt-transport-https lsb-release udev usbutils git 
-
-#Install ZED SDK
-RUN apt-get update -y && apt-get install -y --no-install-recommends wget less cmake curl gnupg2 \
-    build-essential python3 python3-pip python3-dev python3-setuptools libusb-1.0-0-dev -y && \
-    sudo pip install protobuf && \
-    echo "# R35 (release), REVISION: ${L4T_MINOR_VERSION}" > /etc/nv_tegra_release && \
-    # wget -q --no-check-certificate -O ZED_SDK_Linux_JP.run https://download.stereolabs.com/zedsdk/${ZED_SDK_MAJOR}.${ZED_SDK_MINOR}/jp${JETPACK_MAJOR}${JETPACK_MINOR}/jetsons && \
-    # chmod +x ZED_SDK_Linux_JP.run ; ./ZED_SDK_Linux_JP.run silent skip_tools && \
-    # rm -rf /usr/local/zed/resources/* && \
-    # rm -rf ZED_SDK_Linux_JP.run && \
-    rm -rf /var/lib/apt/lists/*
+# https://github.com/dusty-nv/jetson-containers
+FROM dustynv/ros:humble-pytorch-l4t-r35.1.0
 
 #This symbolic link is needed to use the streaming features on Jetson inside a container
 RUN ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-gnu/libv4l2.so
 
-#ROS system setup 
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-ENV ROS_DISTRO humble
-
-RUN apt-get update -y && apt-get install --no-install-recommends -y software-properties-common && \
-    add-apt-repository universe && \
-    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg && \
-    /bin/bash -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME)  main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null' && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean
-
-RUN apt-get update -y && apt-get install -y ros-${ROS_DISTRO}-ros-base && \
-    /bin/bash -c 'source /opt/ros/${ROS_DISTRO}/setup.bash' && \
-    rm -rf /var/lib/apt/lists/*
-
 #Setup ROS Workspace
 ENV ROS_WS ~/ros2_ws
-
 
 RUN mkdir -p ${ROS_WS}/src && \
     cd ${ROS_WS}/ && \
