@@ -8,7 +8,3 @@ install_manifest.txt
 .directory
 .vscode
 .moveit_ci/
-docs_output
-docs_build
-cross_reference
-ur_robot_driver/doc/generated
