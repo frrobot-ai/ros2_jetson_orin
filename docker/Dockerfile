@@ -6,7 +6,7 @@ FROM nvcr.io/nvidia/l4t-jetpack:r35.1.0
 #This environment variable is needed to use the streaming features on Jetson inside a container
 ENV LOGNAME root
 ENV DEBIAN_FRONTEND noninteractive
-ENV ROS_DISTRO foxy
+ENV ROS_DISTRO humble
 
 #Install dependencies
 RUN apt-get update -y && apt-get install -y sudo apt-utils apt-transport-https lsb-release udev usbutils git 
@@ -75,14 +75,14 @@ RUN /bin/bash -c "source /opt/ros/$ROS_DISTRO/setup.bash && \
     mkdir -p ~/ros_ws/src"
 # Download source
 RUN /bin/bash -c "cd ~/ros_ws/src && \
-    git clone -b foxy_ur https://github.com/frrobot-ai/ros2_jetson_orin.git glozzom"
+    git clone -b humble_ur https://github.com/frrobot-ai/ros2_jetson_orin.git glozzom"
 
 RUN apt update && \
     apt install vim git make python3-pip -y
 RUN python3 -m pip install vcstool
 
 RUN /bin/bash -c "cd ~/ros_ws && \
-    vcs import src/glozzom --skip-existing --input src/glozzom/Universal_Robots_ROS2_Driver/Universal_Robots_ROS2_Driver.repos"
+    vcs import src/glozzom --skip-existing --input src/glozzom/Universal_Robots_ROS2_Driver/Universal_Robots_ROS2_Driver.$ROS_DISTRO.repos"
 # Install dependencies
 RUN /bin/bash -c "cd ~/ros_ws && \ 
     rosdep update && \
