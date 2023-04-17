@@ -81,8 +81,10 @@ RUN apt update && \
     apt install vim git make python3-pip -y
 RUN python3 -m pip install vcstool
 
-RUN /bin/bash -c "cd ~/ros_ws && \
-    vcs import src/glozzom --skip-existing --input src/glozzom/Universal_Robots_ROS2_Driver-foxy/Universal_Robots_ROS2_Driver.$ROS_DISTRO.repos"
+RUN apt-get update && \
+    apt-get install ros-${ROS_DISTRO}-ur-robot-driver -y
+# RUN /bin/bash -c "cd ~/ros_ws && \
+#     vcs import src/glozzom --skip-existing --input src/glozzom/Universal_Robots_ROS2_Driver-foxy/Universal_Robots_ROS2_Driver.$ROS_DISTRO.repos"
 # Install dependencies
 RUN /bin/bash -c "cd ~/ros_ws && \ 
     rosdep update && \
