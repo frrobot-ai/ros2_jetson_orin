@@ -1,5 +1,5 @@
 # ROS2 Docker Image
-
+## Getting Started
 To build a docker image of ROS2 on Jetson AGX Orin
  
 1. run the following command directly in this directory:
@@ -16,3 +16,5 @@ To build a docker image of ROS2 on Jetson AGX Orin
     ./RUN-DOCKER.sh
     ```
     Use ``` docker ps ``` to check the container's information, its name should be *$(YOUR_USER_NAME)_ros2_foxy_ur_jetson_1*.
+## Usage
+[Example Commands for Testing the Driver](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/tree/foxy)
