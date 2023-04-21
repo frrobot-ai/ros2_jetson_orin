@@ -79,7 +79,10 @@ RUN /bin/bash -c "cd ~/ros_ws/src && \
 
 RUN apt update && \
     apt install vim git make python3-pip -y
-RUN python3 -m pip install vcstool
+RUN python3 -m pip install vcstool colcon-mixin
+RUN /bin/bash -c "cd ~/ros_ws && \
+    colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml && \
+    colcon mixin update default"
 
 # RUN apt-get update && \
 #     apt-get install ros-${ROS_DISTRO}-ur-robot-driver -y
@@ -92,7 +95,7 @@ RUN /bin/bash -c "cd ~/ros_ws && \
 # Build    
 RUN /bin/bash -c "cd ~/ros_ws && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release --mixin rel-with-deb-info compile-commands ccache && \
+    colcon build --symlink-install --mixin release rel-with-deb-info compile-commands ccache && \
     source install/setup.bash"  
 
 RUN echo "source ~/ros_ws/install/setup.bash" >> ~/.bashrc
