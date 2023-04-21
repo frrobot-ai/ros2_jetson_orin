@@ -25,6 +25,8 @@ To build a docker image of ROS2_foxy_ur with Gazebo simulation on Jetson AGX Ori
 
 ## Running Simulation
 
+### **Attention: Gazebo Segmentation fault (core dumped) PROBLEM occurs on Jetson** (unsolved)
+
 ```bash
 ros2 launch ur_simulation_gazebo ur_sim_control.launch.py
 ```
