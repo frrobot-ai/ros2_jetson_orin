@@ -16,7 +16,7 @@ DOCKER_PROJECT=$1
 if [ -z "${DOCKER_PROJECT}" ]; then
   DOCKER_PROJECT=${USER}
 fi
-DOCKER_CONTAINER="${DOCKER_PROJECT}_ros2_foxy_ur_jetson_1"
+DOCKER_CONTAINER="${DOCKER_PROJECT}_ros2_foxy_ur_gazebo_jetson_1"
 echo "$0: DOCKER_PROJECT=${DOCKER_PROJECT}"
 echo "$0: DOCKER_CONTAINER=${DOCKER_CONTAINER}"
 
@@ -31,4 +31,4 @@ fi
 
 ################################################################################
 
-docker-compose -p ${DOCKER_PROJECT} -f ./docker/docker-compose.yml build
+docker compose -p ${DOCKER_PROJECT} -f ./docker/docker-compose.yml build

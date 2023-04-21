@@ -12,7 +12,7 @@ ENV ROS_DISTRO foxy
 RUN apt-get update -y && apt-get install -y sudo apt-utils apt-transport-https lsb-release udev usbutils git 
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends wget less cmake curl gnupg2 \
-    build-essential python3 python3-pip python3-dev python3-setuptools libusb-1.0-0-dev -y
+    build-essential python3 python3-pip python3-dev python3-setuptools libusb-1.0-0-dev ccache -y
 
 #This symbolic link is needed to use the streaming features on Jetson inside a container
 RUN ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-gnu/libv4l2.so
@@ -64,25 +64,25 @@ RUN apt update && \
     apt install ~nros-$ROS_DISTRO-rqt* -y
 # Install rviz2
 RUN apt update && \
-    sudo apt install ros-$ROS_DISTRO-rviz2 -y
+    apt install ros-$ROS_DISTRO-rviz2 -y
 # Install gazebo11
 RUN curl -sSL http://get.gazebosim.org | sh && \
-    sudo apt install ros-$ROS_DISTRO-gazebo-ros-pkgs -y
-    
+    apt install ros-$ROS_DISTRO-gazebo-ros-pkgs -y
+
 ## UR workspace
 # Create the workspace
 RUN /bin/bash -c "source /opt/ros/$ROS_DISTRO/setup.bash && \
     mkdir -p ~/ros_ws/src"
 # Download source
 RUN /bin/bash -c "cd ~/ros_ws/src && \
-    git clone -b foxy_ur https://github.com/frrobot-ai/ros2_jetson_orin.git glozzom"
+    git clone -b foxy_ur_gazebo https://github.com/frrobot-ai/ros2_jetson_orin.git glozzom"
 
 RUN apt update && \
     apt install vim git make python3-pip -y
 RUN python3 -m pip install vcstool
 
-RUN apt-get update && \
-    apt-get install ros-${ROS_DISTRO}-ur-robot-driver -y
+# RUN apt-get update && \
+#     apt-get install ros-${ROS_DISTRO}-ur-robot-driver -y
 # RUN /bin/bash -c "cd ~/ros_ws && \
 #     vcs import src/glozzom --skip-existing --input src/glozzom/Universal_Robots_ROS2_Driver-foxy/Universal_Robots_ROS2_Driver.$ROS_DISTRO.repos"
 # Install dependencies
@@ -92,7 +92,7 @@ RUN /bin/bash -c "cd ~/ros_ws && \
 # Build    
 RUN /bin/bash -c "cd ~/ros_ws && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release --mixin rel-with-deb-info compile-commands ccache && \
     source install/setup.bash"  
 
 RUN echo "source ~/ros_ws/install/setup.bash" >> ~/.bashrc
