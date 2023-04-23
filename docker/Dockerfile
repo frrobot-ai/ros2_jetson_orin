@@ -78,7 +78,7 @@ RUN /bin/bash -c "cd ~/ros_ws/src && \
     git clone -b foxy_ur_gazebo https://github.com/frrobot-ai/ros2_jetson_orin.git glozzom"
 
 RUN apt update && \
-    apt install vim git make python3-pip -y
+    apt install vim make -y
 RUN python3 -m pip install vcstool colcon-mixin
 RUN /bin/bash -c "cd ~/ros_ws && \
     colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml && \
